@@ -484,14 +484,10 @@ Examples:
 // searchRegistryDataCmd represents the search-registry-data command
 var searchRegistryDataCmd = &cobra.Command{
 	Use:   "search-registry-data",
-	Short: "Search for registry data by schema code and optional registry ID",
-	Long: `Search for registry data by schema code and optional registry ID.
-	
+	Short: "Fetch registry data by schema code and registry ID",
+	Long: `Fetch a registry record by schema code and registry ID (GET .../schema/{schemaCode}/data/_registry?registryId=...).
+
 Examples:
-  # Search registry data by schema code
-  digit search-registry-data --schema-code "license-registry"
-  
-  # Search registry data by schema code and registry ID
   digit search-registry-data --schema-code "license-registry" --registry-id "REGISTRY-20251124-0006-XR"
   
   # With server override
@@ -690,7 +686,7 @@ func init() {
 	
 	// Add flags for search-registry-data command
 	searchRegistryDataCmd.Flags().String("schema-code", "", "Schema code to search for (required)")
-	searchRegistryDataCmd.Flags().String("registry-id", "", "Registry ID to search for (optional)")
+	searchRegistryDataCmd.Flags().String("registry-id", "", "Registry ID to fetch (required)")
 	searchRegistryDataCmd.Flags().String("server", "", "Server URL (overrides config, default: http://localhost:8085)")
 	searchRegistryDataCmd.Flags().String("jwt-token", "", "JWT token for authentication (overrides config)")
 	
@@ -704,6 +700,7 @@ func init() {
 	searchRegistrySchemaCmd.MarkFlagRequired("schema-code")
 	deleteRegistrySchemaCmd.MarkFlagRequired("schema-code")
 	searchRegistryDataCmd.MarkFlagRequired("schema-code")
+	searchRegistryDataCmd.MarkFlagRequired("registry-id")
 	deleteRegistryDataCmd.MarkFlagRequired("registry-id")
 	deleteRegistryDataCmd.MarkFlagRequired("schema-code")
 	

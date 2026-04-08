@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
 // RegistrySchemaRequest represents the request structure for creating a registry schema
@@ -230,9 +231,9 @@ func CreateRegistryData(serverURL, jwtToken, tenantID, clientID, schemaCode stri
 		return "", fmt.Errorf("failed to marshal registry data to JSON: %w", err)
 	}
 
-	// Make HTTP request to registry API
-	url := fmt.Sprintf("%s/registry/v1/data?schemaCode=%s", serverURL, schemaCode)
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(payloadBytes))
+	// POST /registry/v1/schema/{schemaCode}/data (egovio/registry registry-service-2876a8b and peers)
+	reqURL := fmt.Sprintf("%s/registry/v1/schema/%s/data", serverURL, url.PathEscape(schemaCode))
+	req, err := http.NewRequest("POST", reqURL, bytes.NewBuffer(payloadBytes))
 	if err != nil {
 		return "", fmt.Errorf("failed to create HTTP request: %w", err)
 	}
@@ -283,15 +284,15 @@ func SearchRegistryData(serverURL, jwtToken, tenantID, clientID, schemaCode, reg
 	if schemaCode == "" {
 		return "", fmt.Errorf("schemaCode cannot be empty")
 	}
-
-	// Build URL with query parameters
-	url := fmt.Sprintf("%s/registry/v1/data/_registry?schemaCode=%s", serverURL, schemaCode)
-	if registryID != "" {
-		url = fmt.Sprintf("%s&registryId=%s", url, registryID)
+	if registryID == "" {
+		return "", fmt.Errorf("registryID cannot be empty")
 	}
 
-	// Make HTTP request to registry API
-	req, err := http.NewRequest("GET", url, nil)
+	// GET /registry/v1/schema/{schemaCode}/data/_registry?registryId=...
+	reqURL := fmt.Sprintf("%s/registry/v1/schema/%s/data/_registry?registryId=%s",
+		serverURL, url.PathEscape(schemaCode), url.QueryEscape(registryID))
+
+	req, err := http.NewRequest("GET", reqURL, nil)
 	if err != nil {
 		return "", fmt.Errorf("failed to create HTTP request: %w", err)
 	}
@@ -345,11 +346,11 @@ func DeleteRegistryData(serverURL, jwtToken, tenantID, clientID, registryID, sch
 		return "", fmt.Errorf("schemaCode cannot be empty")
 	}
 
-	// Build URL with query parameters
-	url := fmt.Sprintf("%s/registry/v1/data/%s?schemaCode=%s", serverURL, registryID, schemaCode)
+	// DELETE /registry/v1/schema/{schemaCode}/data/{registryID}
+	reqURL := fmt.Sprintf("%s/registry/v1/schema/%s/data/%s",
+		serverURL, url.PathEscape(schemaCode), url.PathEscape(registryID))
 
-	// Make HTTP request to registry API
-	req, err := http.NewRequest("DELETE", url, nil)
+	req, err := http.NewRequest("DELETE", reqURL, nil)
 	if err != nil {
 		return "", fmt.Errorf("failed to create HTTP request: %w", err)
 	}

@@ -3,13 +3,12 @@ module digit-cli
 go 1.21
 
 require (
-	github.com/digitnxt/digit3/code/digit-library v1.1.7
 	github.com/digitnxt/digit3/code/libraries/digit-library v1.1.5
 	github.com/spf13/cobra v1.8.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
-replace github.com/digitnxt/digit3/code/libraries/digit-library => ../../libraries/digit-library
+replace github.com/digitnxt/digit3/code/libraries/digit-library => ../client-libraries/digit-go-client
 
 require (
 	github.com/go-resty/resty/v2 v2.10.0 // indirect

@@ -5,7 +5,7 @@ import (
 
 	"digit-cli/pkg/config"
 	"digit-cli/pkg/jwt"
-	"github.com/digitnxt/digit3/code/digit-library/digit"
+	"github.com/digitnxt/digit3/code/libraries/digit-library/digit"
 )
 
 // GetValidJWTToken returns a valid JWT token, refreshing if necessary

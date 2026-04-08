@@ -1,6 +1,4 @@
 github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
-github.com/digitnxt/digit3/code/digit-library v1.1.7 h1:fTf+NAPXx2qdXXuqpIgMF0K8BcNE7WzjqQlVDJbSxCo=
-github.com/digitnxt/digit3/code/digit-library v1.1.7/go.mod h1:5VrLKowFDK9HwcQWtQtJwNHJUvJ2LtzDxKcP2fGS0fw=
 github.com/go-resty/resty/v2 v2.10.0 h1:Qla4W/+TMmv0fOeeRqzEpXPLfTUnR5HZ1+lGs+CkiCo=
 github.com/go-resty/resty/v2 v2.10.0/go.mod h1:iiP/OpA0CkcL3IGt1O0+/SIItFUbkkyw5BGXiVdTu+A=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=

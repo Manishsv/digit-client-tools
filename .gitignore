@@ -1,0 +1,12 @@
+**/node_modules/
+**/dist/
+
+# Java / Maven
+**/target/
+**/*.class
+
+# Python
+**/__pycache__/
+**/*.pyc
+.venv/
+
