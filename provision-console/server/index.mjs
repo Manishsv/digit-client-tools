@@ -77,12 +77,19 @@ function boundaryHeaders(jwt) {
 
 /** Stock MDMS v2 image: eg_mdms_* uses VARCHAR(64) for tenantid, createdby, lastmodifiedby. */
 const MDMS_VARCHAR = 64;
+/**
+ * Observed behavior (mdms-v2 image used in local stack): auditDetails.createdBy may get duplicated
+ * into a comma-separated string (e.g. "uuid, uuid"), which can overflow VARCHAR(64).
+ * Keep our provided audit ids short enough that even a duplicated value still fits:
+ * \(2*n + 2 <= 64 => n <= 31\).
+ */
+const MDMS_AUDIT_ID_MAX = 31;
 
 /** Persister maps auditDetails.createdBy/lastModifiedBy into DB; if omitted, service may use full JWT sub (>64). */
 function mdmsClientId(jwt) {
   const sub = decodeJwt(jwt).sub;
   if (!sub) throw new Error("JWT missing sub");
-  return sub.length > MDMS_VARCHAR ? sub.slice(0, MDMS_VARCHAR) : sub;
+  return sub.length > MDMS_AUDIT_ID_MAX ? sub.slice(0, MDMS_AUDIT_ID_MAX) : sub;
 }
 
 function mdmsHeaders(jwt) {
