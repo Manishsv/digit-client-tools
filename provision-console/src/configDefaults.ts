@@ -21,6 +21,8 @@ export type ServiceSettings = {
   oauthUsername: string;
   oauthPassword: string;
   jwt: string;
+  coordinationServiceBaseUrl: string;
+  governanceServiceBaseUrl: string;
   boundaryBaseUrl: string;
   registryBaseUrl: string;
   mdmsBaseUrl: string;
@@ -41,6 +43,8 @@ export const defaultSettings: ServiceSettings = {
   oauthUsername: LOCAL_DEMO_OAUTH.username,
   oauthPassword: LOCAL_DEMO_OAUTH.password,
   jwt: "",
+  coordinationServiceBaseUrl: "http://127.0.0.1:8090",
+  governanceServiceBaseUrl: "http://127.0.0.1:8091",
   boundaryBaseUrl: "http://127.0.0.1:8093",
   registryBaseUrl: "http://127.0.0.1:8104",
   mdmsBaseUrl: "http://127.0.0.1:8099",

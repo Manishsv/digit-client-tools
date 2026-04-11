@@ -188,6 +188,150 @@ function upstreamFetchErrorPayload(err, label, url) {
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 
+function demoHeaders({ jwt, tenantId, clientId }) {
+  const t = String(tenantId || "").trim();
+  const c = String(clientId || "").trim();
+  const j = String(jwt || "").trim();
+  if (!j) throw new Error("jwt required");
+  if (!t) throw new Error("tenantId required");
+  if (!c) throw new Error("clientId required");
+  return {
+    Authorization: `Bearer ${j}`,
+    "X-Tenant-ID": t,
+    "X-Client-ID": c,
+    "X-Client-Id": c,
+  };
+}
+
+app.post("/api/gov/rulesets", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { governanceServiceBaseUrl, jwt, tenantId, clientId, yamlText, status, humanVersion, issuerAuthorityId, policyDocuments } = req.body || {};
+    upstreamUrl = `${String(governanceServiceBaseUrl).replace(/\/$/, "")}/governance/v1/rulesets`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const body = {
+      yamlText,
+      status: status || "ACTIVE",
+      humanVersion: humanVersion || undefined,
+      issuerAuthorityId,
+      policyDocuments: policyDocuments || [],
+    };
+    const r = await fetchUpstream(upstreamUrl, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Governance service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
+app.post("/api/coord/entity/resolve", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { coordinationServiceBaseUrl, jwt, tenantId, clientId, body } = req.body || {};
+    upstreamUrl = `${String(coordinationServiceBaseUrl).replace(/\/$/, "")}/coordination/entity/resolve`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const r = await fetchUpstream(upstreamUrl, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Coordination service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
+app.post("/api/coord/link", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { coordinationServiceBaseUrl, jwt, tenantId, clientId, body } = req.body || {};
+    upstreamUrl = `${String(coordinationServiceBaseUrl).replace(/\/$/, "")}/coordination/link`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const r = await fetchUpstream(upstreamUrl, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Coordination service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
+app.post("/api/coord/cases/governance-decide", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { coordinationServiceBaseUrl, jwt, tenantId, clientId, caseId, body } = req.body || {};
+    if (!caseId) return res.status(400).json({ error: "caseId required" });
+    upstreamUrl = `${String(coordinationServiceBaseUrl).replace(/\/$/, "")}/coordination/v1/cases/${encodeURIComponent(String(caseId))}/governance:decide`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const r = await fetchUpstream(upstreamUrl, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Coordination service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
+app.post("/api/gov/appeals", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { governanceServiceBaseUrl, jwt, tenantId, clientId, body } = req.body || {};
+    upstreamUrl = `${String(governanceServiceBaseUrl).replace(/\/$/, "")}/governance/v1/appeals`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const r = await fetchUpstream(upstreamUrl, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Governance service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
+app.post("/api/gov/orders", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { governanceServiceBaseUrl, jwt, tenantId, clientId, body } = req.body || {};
+    upstreamUrl = `${String(governanceServiceBaseUrl).replace(/\/$/, "")}/governance/v1/orders`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const r = await fetchUpstream(upstreamUrl, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Governance service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
+app.post("/api/gov/decisions-recompute", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { governanceServiceBaseUrl, jwt, tenantId, clientId, body } = req.body || {};
+    upstreamUrl = `${String(governanceServiceBaseUrl).replace(/\/$/, "")}/governance/v1/decisions:recompute`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const r = await fetchUpstream(upstreamUrl, { method: "POST", headers: { ...h, "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Governance service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
+app.post("/api/coord/cases/timeline", async (req, res) => {
+  let upstreamUrl = "";
+  try {
+    const { coordinationServiceBaseUrl, jwt, tenantId, clientId, caseId } = req.body || {};
+    if (!caseId) return res.status(400).json({ error: "caseId required" });
+    upstreamUrl = `${String(coordinationServiceBaseUrl).replace(/\/$/, "")}/coordination/entity/Case/${encodeURIComponent(String(caseId))}/timeline`;
+    const h = demoHeaders({ jwt, tenantId, clientId });
+    const r = await fetchUpstream(upstreamUrl, { method: "GET", headers: { ...h } });
+    const text = await r.text();
+    return res.status(r.status).type("application/json").send(text);
+  } catch (e) {
+    const { status, json } = upstreamFetchErrorPayload(e, "Coordination service", upstreamUrl);
+    return res.status(status).json(json);
+  }
+});
+
 app.post("/api/auth/token", async (req, res) => {
   try {
     const b = req.body || {};

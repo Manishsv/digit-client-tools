@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { defaultSettings, LOCAL_DEMO_OAUTH, type ServiceSettings } from "./configDefaults";
+import { GovernanceDemoPanel } from "./GovernanceDemoPanel";
 import {
   OverviewPanel,
   Phase0Panel,
@@ -19,6 +20,7 @@ import {
 
 const TABS: { id: string; label: string }[] = [
   { id: "overview", label: "Overview" },
+  { id: "Gov", label: "Gov · Governance demo" },
   { id: "0", label: "0 · Prerequisites" },
   { id: "A", label: "A · Account" },
   { id: "B", label: "B · Keycloak / JWT" },
@@ -96,6 +98,9 @@ function SettingsColumn({
         <div className="jwt-banner">Active: {jwtPreview}</div>
       </div>
       <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "0.75rem 0" }} />
+      {row("coordinationServiceBaseUrl", "Coordination service")}
+      {row("governanceServiceBaseUrl", "Governance service")}
+      <hr style={{ border: "none", borderTop: "1px solid var(--border)", margin: "0.75rem 0" }} />
       {row("boundaryBaseUrl", "Boundary")}
       {row("registryBaseUrl", "Registry")}
       {row("mdmsBaseUrl", "MDMS")}
@@ -115,6 +120,9 @@ export default function App() {
   switch (tab) {
     case "overview":
       panel = <OverviewPanel />;
+      break;
+    case "Gov":
+      panel = <GovernanceDemoPanel s={s} setS={setS} />;
       break;
     case "0":
       panel = <Phase0Panel />;
